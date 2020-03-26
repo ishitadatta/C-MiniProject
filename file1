@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include"header.h"
+
+//Function to create the file
+void create_file(char *fname)
+{
+	FILE *fp = fopen(fname,"w");
+	if(fp!=NULL)
+  		fputs("S.No.|Name|Price|Quantity\n",fp);
+  	else
+  		printf("\nError occured during file creation");
+  	fclose(fp);
+}
+
+//Append New Product Details 
+void append_Product(char *fname)
+{
+	int i,n;
+	PROD *p;
+	printf("\nEnter no. of new products: ");
+	scanf("%d",&n);	
+	FILE *fp=fopen(fname,"a"); //Open file in append mode
+
+	for(i=1;i<=n;i++)
+	{
+		//Input product details
+		printf("\nEnter serial no. : ");
+		scanf("%d",&p->psn);
+		printf("Enter Product Name: ");
+		scanf("%s",p->name);
+		printf("Enter price: ");
+		scanf("%f",&p->price);
+		printf("Enter quantity: ");
+		scanf("%d",&p->quantity);
+		
+		//Append to file
+		fprintf(fp,"%d|",p->psn);
+		fprintf(fp,"%s|",p->name);
+		fprintf(fp,"%.2f|",p->price);
+		fprintf(fp,"%d\n",p->quantity);
+	}
+	fclose(fp);
+}
+ 
+//Display entire file contents
+void display_All(char *fname)
+{
+	FILE *fp = fopen(fname,"r");
+	char c;
+	if(fp==NULL)
+	{
+		printf("\nError occured while opening file\n");
+		exit(1);
+	}
+	//IMPORTANT: This is just basic and was just to check the code. Please beautify it and elaborate it as you feel fit.
+	while((c=fgetc(fp))!=EOF) 	
+	{
+		printf("%c",c);		//Delimiter for strtok is | (i.e.,OR symbol) in case you tokenise
+	}
+	fclose(fp);
+}
+
+//Delete 1 or more product details
+//ASSUMPTION: Serial No. = Line No. + 1
+void delete_Product(char *fname)
+{
+	char choice,ch;	
+	int psn,temp=1;
+	do
+	{
+		printf("\nEnter serial no. of product to be deleted: ");
+		scanf("%d",&psn);
+			
+		FILE *f1, *f2;
+		int delete_line, temp = 1;
+		//Open original file in read mode
+		f1 = fopen(fname, "r");
+		if(f1!=NULL)
+		{
+			rewind(f1);
+		    	//open new file in write mode
+		    	f2 = fopen("replica.c", "w");
+		    	while (ch = fgetc(f1)!= EOF)
+		    	{
+				if(ch == '\n')
+			    		temp++;
+				if(temp != (psn+1))	
+					fputc(ch, f2); //Copy other lines to replica.c
+		    	}
+		}
+	    	fclose(f1);
+	    	fclose(f2);
+	    	remove(fname);
+	    	//rename the file replica.c to original name
+	    	rename("replica.c", fname);
+
+		printf("\nContinue deleting more products?(Y/N): ");
+		scanf(" %c",&choice);
+	}while(choice!='n'||choice!='N');
+}
+
+
+

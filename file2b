@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include"header.h"	//Includes structure definition and function prototypes
+
+/* 
+READ - 
+This is a basic working model.
+Additional functionality as well as data (mfg_date, exp_date) may be added 
+The program uses one structure, no linked lists at all.
+*/
+
+int main(void)
+{
+	int ch;
+	char fname[]="Products.txt";	//Default file for storing all product information
+	createFile(fname);
+	while(1)
+	{
+		
+		printf("\nMENU -\n");
+		printf("1. Add product details\n");
+		printf("2. Display list of products\n");
+		printf("3. Display single product details\n");
+		printf("4. Delete product\n");
+		printf("5. Modify product details\n");
+		printf("6. EXIT\n");
+		
+		printf("\nEnter choice(no.): ");
+		scanf("%d",&ch);
+		
+		switch(ch)
+		{
+			case 1: appendProduct(fname);	//Add one or more new products along with details
+				break;
+			case 2: displayAll(fname);	//Display list of all products' details stored in file
+				break;
+			case 3: displayProduct(fname);
+				break;
+			case 4: deleteProduct(fname);	//Deletes product details from file
+				break;
+			case 5: //modProduct(fname);
+				break;
+			case 6: exit(0);
+			default: printf("Invalid chocie, try again.");
+		}	
+	}
+	return 0;
+}

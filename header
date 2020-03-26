@@ -1,0 +1,15 @@
+typedef struct product
+{
+	int psn;
+	char name[50];
+	float price;
+	int quantity;
+	
+}PROD;
+
+void create_file(char *fname);
+void append_Product(char *fname);
+void delete_Product(char *fname);
+void display_Product(char *fname);
+void display_All(char *fname);
+

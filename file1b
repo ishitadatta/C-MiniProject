@@ -1,0 +1,137 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include"header.h"
+
+//1.Function to create the file
+void createFile(char *fname)
+{
+	FILE *fp = fopen(fname,"a");
+	if(fp==NULL)
+  		fprintf(fp,"S.No.\t|Name\t|Price\t|Quantity\t\n");
+  	fclose(fp);
+}
+
+//2.Append New Product Details 
+void appendProduct(char *fname)
+{
+	int i,n;
+	PROD *p=(PROD *)malloc(sizeof(PROD));
+	printf("\nEnter no. of new products: ");
+	scanf("%d",&n);	
+	FILE *fp=fopen(fname,"a+"); //Open file in append mode
+
+	for(i=1;i<=n;i++)
+	{
+		//Input product details
+		printf("\nEnter serial no. : ");
+		scanf("%d",&p->psn);	
+		printf("Enter Product Name: ");
+		scanf("%s",p->name);
+		printf("Enter price: ");
+		scanf("%f",&p->price);
+		printf("Enter quantity: ");
+		scanf("%d",&p->quantity);
+		
+		//Append to file
+		fprintf(fp,"%d\t|",p->psn);
+		fprintf(fp,"%s\t|",p->name);
+		fprintf(fp,"%.2f\t|",p->price);
+		fprintf(fp,"%d\n",p->quantity);
+	}
+	
+	fclose(fp);
+}
+ 
+//3.Display entire file contents
+void displayAll(char *fname)
+{
+	FILE *fp = fopen(fname,"r");
+	char c;
+	if(fp==NULL)
+	{
+		printf("\nError occured while opening file\n");
+		exit(1);
+	}
+	
+	while((c=fgetc(fp))!=EOF) 	
+	{
+		printf("%c",c);		
+	}
+	fclose(fp);
+}
+
+//4. Display specific product
+void displayProduct(char *fname)
+{
+	FILE *fp=fopen(fname,"r");
+	char line[50];
+	int psn;
+
+	printf("Enter serial number of product whose details are to be displayed: ");
+	scanf("%d",&psn);
+
+	while(fgets(line,50,fp)!=NULL)
+	{
+		char *t;
+		t=strtok(line,"|");
+
+		if(atoi(t)==psn)
+		{
+			printf("S.No.\t|Name\t|Price\t|Quantity\n");
+			printf("%s",t);
+			t=strtok(NULL,"|");
+			printf("|%s",t);
+			t=strtok(NULL,"|");
+			printf("|%s",t);
+			t=strtok(NULL,"|");
+			printf("|%s\n",t);
+		}
+		/*else
+		{	printf("Invalid Serial number.\n");	} */
+	}
+	fclose(fp);
+}
+
+//Delete 1 or more product details
+//ASSUMPTION: Serial No. = Line No. + 1
+
+void deleteProduct(char *fname)
+{
+	char choice,ch;	
+	int psn,temp=1;
+	do
+	{
+		printf("\nEnter serial no. of product to be deleted: ");
+		scanf("%d",&psn);
+			
+		FILE *f1, *f2;
+		int delete_line, temp = 1;
+		//Open original file in read mode
+		f1 = fopen(fname, "r");
+		if(f1!=NULL)
+		{
+			rewind(f1);
+		    	//open new file in write mode
+		    	f2 = fopen("replica.txt", "a");
+		    	while (ch = fgetc(f1)!= EOF)
+		    	{
+				if(ch == '\n')
+			    		temp++;
+				if(temp != (psn+1))	
+					fputc(ch, f2); //Copy other lines to replica.c
+		    	}
+		}
+	    	fclose(f1);
+	    	fclose(f2);
+	    	remove(fname);
+	    	//rename the file replica.c to original name
+	    	rename("replica.txt", fname);
+
+		printf("\nContinue deleting more products?(Y/N): ");
+		scanf(" %c",&choice);
+		printf("%c",choice);
+	}while(choice!='n'||choice!='N');
+}
+
+
